@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import React from "react";
 import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -37,9 +38,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable}`}
+      className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable} scroll-smooth`}
+      data-theme="light"
     >
-      <body className="bg-ink-950 font-body text-txt antialiased">{children}</body>
+      <body className="min-h-screen antialiased transition-colors">
+        {children}
+      </body>
     </html>
   );
 }
