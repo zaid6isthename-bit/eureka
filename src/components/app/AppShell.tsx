@@ -5,22 +5,40 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Moon, Sun, ToggleLeft } from "lucide-react";
+import {
+  LayoutDashboard,
+  Database,
+  Radar,
+  TrendingUp,
+  ListChecks,
+  Recycle,
+  Plug,
+  Settings,
+  Search,
+  Bell,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Building2,
+  ToggleLeft,
+  Sun,
+  Moon,
+} from "lucide-react";
 import { CountUp } from "@/components/ui/CountUp";
 import { ALERTS, COMPANY, HEALTH } from "@/lib/mock-data";
 
 const NAV_MAIN = [
-  { href: "/", label: "Overview", icon: "LayoutDashboard" },
-  { href: "/understand", label: "Understand", icon: "Database" },
-  { href: "/detect", label: "Detect", icon: "Radar" },
-  { href: "/predict", label: "Predict", icon: "TrendingUp" },
-  { href: "/recommend", label: "Recommend", icon: "ListChecks" },
-  { href: "/recover", label: "Recover", icon: "Recycle" },
+  { href: "/", label: "Overview", icon: LayoutDashboard },
+  { href: "/understand", label: "Understand", icon: Database },
+  { href: "/detect", label: "Detect", icon: Radar },
+  { href: "/predict", label: "Predict", icon: TrendingUp },
+  { href: "/recommend", label: "Recommend", icon: ListChecks },
+  { href: "/recover", label: "Recover", icon: Recycle },
 ];
 
 const NAV_FOOTER = [
-  { href: "/integrations", label: "Integrations", icon: "Plug" },
-  { href: "/settings", label: "Settings", icon: "Settings" },
+  { href: "/integrations", label: "Integrations", icon: Plug },
+  { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 function healthColor(score: number, theme: "light" | "dark") {
@@ -52,12 +70,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const width = collapsed ? 64 : 260;
 
-  const navItem = (item: {
-    href: string;
-    label: string;
-    icon: string;
-  }) => {
+  const navItem = (item: (typeof NAV_MAIN)[number]) => {
     const active = pathname === item.href;
+    const Icon = item.icon;
     return (
       <Link
         key={item.href}
@@ -73,7 +88,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {active && (
           <span className="absolute left-0 top-1/2 h-2 w-0.5 -translate-y-1/2 rounded-full bg-green-500" />
         )}
-        <Moon size={16} className="shrink-0" />
+        <Icon size={16} className="shrink-0" />
         {!collapsed && <span className="truncate">{item.label}</span>}
       </Link>
     );
@@ -171,8 +186,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               aria-label="Toggle theme"
               className="relative rounded-lg border border-border bg-bg px-3 py-2 transition-colors hover:bg-bg hover:text-ink-950 flex items-center gap-2"
             >
-              <Sun size={14} className="hidden" />
-              <Moon size={14} className="hidden" />
+              <Sun size={14} />
+              <Moon size={14} />
             </button>
           </div>
         </header>
