@@ -55,32 +55,32 @@
 }
 
 [data-theme="dark"] {
-  /* Pitch black backgrounds */
+  /* Pitch black everywhere */
   --bg: #000000;
-  --bg-subtle: #0C0705;
-  --surface: #0C0705;
-  --surface-elevated: #140E0B;
-  --card: #0C0705;
+  --bg-subtle: #000000;
+  --surface: #000000;
+  --surface-elevated: #000000;
+  --card: #000000;
 
   /* Bright green borders */
   --border: #05FC2A;
-  --border-weak: #1E3A24;
-  --border-disabled: #2A2622;
+  --border-weak: #07330F;
+  --border-disabled: #000000;
 
-  --ink-100: #161210;
-  --ink-200: #201A16;
-  --ink-300: #2B2420;
-  --ink-400: #453B34;
-  --ink-500: #615449;
-  --ink-600: #7E6F64;
-  --ink-700: #9A8A7F;
-  --ink-800: #0C0705;   /* card surface */
-  --ink-750: #191310;   /* hover surface */
-  --ink-900: #080505;   /* header/track surface */
+  --ink-100: #000000;
+  --ink-200: #000000;
+  --ink-300: #000000;
+  --ink-400: #000000;
+  --ink-500: #000000;
+  --ink-600: #000000;
+  --ink-700: #000000;
+  --ink-800: #000000;   /* card surface */
+  --ink-750: #000000;   /* hover surface */
+  --ink-900: #000000;   /* header/track surface */
   --ink-950: #FAFAFA;
 
   --txt: #F5F5F5;
-  --line: #231D19;
+  --line: #000000;
 
   --signal-green: #05FC2A;
   --signal-green-light: #07330F;
@@ -95,8 +95,8 @@
   --stable: #05FC2A;
   --info-blue: #60A5FA;
 
-  --muted: #8A7D73;
-  --muted-soft: #201A16;
+  --muted: #A1A1AA;
+  --muted-soft: #000000;
 }
 
 /* --- Tailwind v4 theme tokens (generate bg, text and border color utilities) --- */
