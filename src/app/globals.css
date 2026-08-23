@@ -80,7 +80,8 @@
   --ink-950: #FAFAFA;
 
   --txt: #F5F5F5;
-  --line: #000000;
+  /* Bright green outlines for cards and tiles */
+  --line: #05FC2A;
 
   --signal-green: #05FC2A;
   --signal-green-light: #07330F;

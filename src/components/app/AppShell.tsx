@@ -22,6 +22,7 @@ import {
   Building2,
   Sun,
   Moon,
+  PanelLeft,
 } from "lucide-react";
 import { CountUp } from "@/components/ui/CountUp";
 import { ALERTS, COMPANY, HEALTH } from "@/lib/mock-data";
@@ -51,6 +52,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [logoHover, setLogoHover] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
   // Restore persisted theme + sidebar state on client mount only
@@ -124,29 +126,52 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             collapsed ? "justify-center px-2" : "justify-between px-4"
           }`}
         >
-          <Link href="/" className="flex items-center gap-3" aria-label="RECLAIM home">
-            <Image
-              src={theme === "light" ? "/reclaim-light.png" : "/reclaim-dark.png"}
-              alt=""
-              width={30}
-              height={30}
-              className="rounded-[5px]"
-            />
-            {!collapsed && (
-              <span className="font-brand text-[18px] font-semibold tracking-tight text-txt">
-                RECLAIM
-              </span>
-            )}
-          </Link>
-          {!collapsed && (
+          {collapsed ? (
             <button
-              onClick={() => setCollapsed(true)}
-              aria-label="Collapse sidebar"
-              title="Collapse sidebar"
-              className="rounded-md p-1.5 text-mut transition-colors hover:bg-ink-750 hover:text-txt"
+              onClick={() => setCollapsed(false)}
+              onMouseEnter={() => setLogoHover(true)}
+              onMouseLeave={() => setLogoHover(false)}
+              onFocus={() => setLogoHover(true)}
+              onBlur={() => setLogoHover(false)}
+              aria-label="Expand sidebar"
+              title="Expand sidebar"
+              className="flex h-[30px] w-[30px] items-center justify-center rounded-md transition-transform hover:scale-110"
             >
-              <ChevronLeft size={18} />
+              {logoHover ? (
+                <PanelLeft size={26} className="text-stable" />
+              ) : (
+                <Image
+                  src={theme === "light" ? "/reclaim-light.png" : "/reclaim-dark.png"}
+                  alt="RECLAIM"
+                  width={30}
+                  height={30}
+                  className="rounded-[5px]"
+                />
+              )}
             </button>
+          ) : (
+            <>
+              <Link href="/" className="flex items-center gap-3" aria-label="RECLAIM home">
+                <Image
+                  src={theme === "light" ? "/reclaim-light.png" : "/reclaim-dark.png"}
+                  alt=""
+                  width={30}
+                  height={30}
+                  className="rounded-[5px]"
+                />
+                <span className="font-brand text-[18px] font-semibold tracking-tight text-txt">
+                  RECLAIM
+                </span>
+              </Link>
+              <button
+                onClick={() => setCollapsed(true)}
+                aria-label="Collapse sidebar"
+                title="Collapse sidebar"
+                className="rounded-md p-1.5 text-mut transition-colors hover:bg-ink-750 hover:text-txt"
+              >
+                <ChevronLeft size={18} />
+              </button>
+            </>
           )}
         </div>
 
