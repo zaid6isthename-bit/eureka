@@ -1,0 +1,12 @@
+
+> reclaim-mvp@0.1.0 dev
+> next dev
+
+▲ Next.js 16.3.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.31.47:3000
+- Environments: .env
+✓ Ready in 408ms
+✓ Running next.config.ts took 38ms
+
+ GET / 200 in 477ms (next.js: 237ms, application-code: 240ms)

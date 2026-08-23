@@ -1,26 +1,118 @@
 @import "tailwindcss";
 
+/* -- White with Green Borders & Black Accents Theme -- */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Backgrounds */
+  --bg: #FFFFFF;
+  --bg-subtle: #F8F9FA;
+  --surface: #FFFFFF;
+  --surface-elevated: #F5F5F5;
+  --card: #FFFFFF;
+
+  /* Borders */
+  --border: #2E7D32;       /* green accent border */
+  --border-weak: #C8E6C9;  /* light green */
+  --border-disabled: #E0E0E0;
+
+  /* Text/Accents */
+  --ink-950: #000000;      /* pure black - primary text */
+  --ink-800: #1A1A1A;
+  --ink-700: #333333;
+  --ink-600: #4A4A4A;
+  --ink-500: #5A5A5A;
+  --ink-400: #757575;
+  --ink-300: #9E9E9E;
+  --ink-200: #B0B0B0;
+  --ink-100: #EEEEEE;
+
+  /* Green accents */
+  --signal-green: #2E7D32;      /* primary green accent */
+  --signal-green-light: #C8E6C9; /* light green */
+  --signal-green-hover: #A5D6A7;
+  --signal-green-border: #2E7D32; /* green border */
+
+  /* Data/system - cyan */
+  --flow-cyan: #0D9488;
+  --flow-cyan-light: #E0F2F1;
+
+  /* Problems/alerts - red adapted */
+  --risk-red: #D32F2F;
+  --risk-red-light: #FFCDD2;
+
+  /* Info */
+  --info-blue: #1565C0;
+
+  /* Muted */
+  --muted: #6B7280;
+  --muted-soft: #E5E7EB;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* --- Base & Body --- */
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: var(--bg);
+  color: var(--ink-950);
+  -webkit-font-smoothing: antialiased;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* --- Typography --- */
+h1, .h1 { font-family: "Space Grotesk", system-ui, sans-serif; font-size: 2rem; font-weight: 600; color: var(--ink-950); }
+h2, .h2 { font-family: "Space Grotesk", system-ui, sans-serif; font-size: 1.75rem; font-weight: 600; color: var(--ink-950); }
+h3, .h3 { font-family: "Space Grotesk", system-ui, sans-serif; font-size: 1.5rem; font-weight: 600; color: var(--ink-950); }
+.body1 { font-family: "Inter", system-ui, sans-serif; font-size: 1rem; line-height: 1.5; color: var(--ink-700); }
+.body2 { font-family: "Inter", system-ui, sans-serif; font-size: 0.875rem; line-height: 1.5; color: var(--ink-600); }
+.caption { font-family: "Inter", system-ui, sans-serif; font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+.mono { font-family: "IBM Plex Mono", monospace; color: var(--ink-950); }
+.mono-sm { font-family: "IBM Plex Mono", monospace; font-size: 0.75rem; color: var(--ink-600); }
+
+/* --- Border & Border-Radius Utilities --- */
+.border-green-accent { border-color: var(--signal-green-border) !important; }
+.border-green-weak { border-color: var(--border-weak) !important; }
+.border-black-accent { border-color: var(--ink-950) !important; }
+.border { border: 1px solid var(--border); }
+.border-weak { border: 1px solid var(--border-weak); }
+.rounded { border-radius: 8px; }
+.rounded-sm { border-radius: 4px; }
+.rounded-full { border-radius: 9999px; }
+
+/* --- Color Utilities --- */
+.text-black { color: var(--ink-950); }
+.text-green-accent { color: var(--signal-green); }
+.text-green-light { color: var(--signal-green-light); }
+.text-green-hover { color: var(--signal-green-hover); }
+.text-cyan { color: var(--flow-cyan); }
+.text-red { color: var(--risk-red); }
+.text-muted { color: var(--muted); }
+.text-sm-muted { font-size: 0.85em; color: var(--muted); }
+.bg-white { background-color: var(--white, #FFFFFF); }
+.bg-green-light { background-color: var(--signal-green-light); }
+.bg-card { background-color: var(--card); }
+.bg-subtle { background-color: var(--bg-subtle); }
+
+/* --- Layout Utilities --- */
+.app-shell { overflow-x: hidden; }
+.sidebar { width: 240px; min-height: 100vh; background: var(--bg); border-right: 4px solid var(--signal-green-border); }
+.sidebar-collapsed { width: 64px; }
+.topbar { height: 64px; background: var(--bg); border-bottom: 1px solid var(--border-weak); padding: 0 20px; }
+.main-wrapper { margin-left: 240px; margin-top: 64px; padding: 24px; }
+.main-wrapper-collapsed { margin-left: 64px; }
+
+/* --- Responsive --- */
+@media (max-width: 1280px) { .sidebar { width: 200px; } }
+@media (max-width: 1024px) { .sidebar { display: none; } .main-wrapper { margin-left: 0; } }
+@media (max-width: 768px) { .main-wrapper { padding: 16px; } }
+
+/* --- Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .no-anim * {
+    transition: none !important;
+    animation: none !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+/* --- Scrollbar --- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-subtle); }
+::-webkit-scrollbar-thumb { background: var(--signal-green-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--signal-green); }
