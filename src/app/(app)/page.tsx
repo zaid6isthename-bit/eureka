@@ -56,7 +56,7 @@ export default function OverviewPage() {
                   duration={500}
                   className="font-mono text-[44px] font-medium leading-none text-txt"
                 />
-                <Sparkline points={HEALTH.spark} color="var(--signal-gold)" />
+                <Sparkline points={HEALTH.spark} color="var(--gold)" />
               </div>
               <p className="mt-3 text-[13px] text-mut">{HEALTH.status}</p>
             </section>
@@ -107,7 +107,7 @@ export default function OverviewPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-[12px] font-medium uppercase tracking-wider text-mut">Cash flow</h2>
             <div className="flex items-center gap-3">
-              <span className="font-mono text-[13px] text-gold">
+              <span className="font-mono text-[13px] text-green-accent">
                 <CountUp value={CASH.current} format={lakh} />
               </span>
               <div role="group" aria-label="Chart range" className="flex rounded-md border border-line bg-ink-900 p-0.5">
@@ -128,7 +128,7 @@ export default function OverviewPage() {
             <Skeleton className="mt-4 h-[160px] w-full" />
           ) : (
             <div className="mt-4">
-              <TrendChart actual={actual} projected={CASH.projected} bandPct={CASH.bandPct} color="var(--signal-gold)" splitLabel={["actual \u00B7 90d", "projected \u00B7 30d"]} />
+              <TrendChart actual={actual} projected={CASH.projected} bandPct={CASH.bandPct} color="var(--signal-green)" splitLabel={["actual \u00B7 90d", "projected \u00B7 30d"]} />
             </div>
           )}
         </section>

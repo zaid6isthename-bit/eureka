@@ -126,7 +126,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         >
           <Link href="/" className="flex items-center gap-3" aria-label="RECLAIM home">
             <Image
-              src="/reclaim.png"
+              src={theme === "light" ? "/reclaim-light.png" : "/reclaim-dark.png"}
               alt=""
               width={30}
               height={30}

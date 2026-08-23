@@ -55,46 +55,48 @@
 }
 
 [data-theme="dark"] {
-  --bg: #0B0E0B;
-  --bg-subtle: #0F130F;
-  --surface: #121612;
-  --surface-elevated: #171C17;
-  --card: #151A15;
+  /* Pitch black backgrounds */
+  --bg: #000000;
+  --bg-subtle: #0C0705;
+  --surface: #0C0705;
+  --surface-elevated: #140E0B;
+  --card: #0C0705;
 
-  --border: #66BB6A;
-  --border-weak: #26302A;
-  --border-disabled: #2A332B;
+  /* Bright green borders */
+  --border: #05FC2A;
+  --border-weak: #1E3A24;
+  --border-disabled: #2A2622;
 
-  --ink-100: #1A201A;
-  --ink-200: #232B23;
-  --ink-300: #303A30;
-  --ink-400: #465446;
-  --ink-500: #5F705F;
-  --ink-600: #7B8B7B;
-  --ink-700: #9AA99A;
-  --ink-800: #151A15;
-  --ink-750: #1C231C;
-  --ink-900: #111511;
-  --ink-950: #EDF2ED;
+  --ink-100: #161210;
+  --ink-200: #201A16;
+  --ink-300: #2B2420;
+  --ink-400: #453B34;
+  --ink-500: #615449;
+  --ink-600: #7E6F64;
+  --ink-700: #9A8A7F;
+  --ink-800: #0C0705;   /* card surface */
+  --ink-750: #191310;   /* hover surface */
+  --ink-900: #080505;   /* header/track surface */
+  --ink-950: #FAFAFA;
 
-  --txt: #EDF2ED;
-  --line: #242C24;
+  --txt: #F5F5F5;
+  --line: #231D19;
 
-  --signal-green: #66BB6A;
-  --signal-green-light: #1E3323;
-  --signal-green-hover: #2E4630;
-  --signal-green-border: #66BB6A;
+  --signal-green: #05FC2A;
+  --signal-green-light: #07330F;
+  --signal-green-hover: #0B4A18;
+  --signal-green-border: #05FC2A;
 
   --flow-cyan: #22D3EE;
   --flow-cyan-light: #10302F;
 
   --gold: #FBBF24;
   --risk: #F87171;
-  --stable: #34D399;
+  --stable: #05FC2A;
   --info-blue: #60A5FA;
 
-  --muted: #97A297;
-  --muted-soft: #232B23;
+  --muted: #8A7D73;
+  --muted-soft: #201A16;
 }
 
 /* --- Tailwind v4 theme tokens (generate bg, text and border color utilities) --- */

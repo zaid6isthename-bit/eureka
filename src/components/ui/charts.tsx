@@ -23,7 +23,7 @@ export function TrendChart({
   actual,
   projected,
   bandPct,
-  color = "var(--signal-gold)",
+  color = "var(--gold)",
   height = 160,
   splitLabel,
 }: {
@@ -61,13 +61,13 @@ export function TrendChart({
           </linearGradient>
         </defs>
         {[0.25, 0.5, 0.75].map((f) => (
-          <line key={f} x1={pad} x2={w - pad} y1={pad + f * (h - pad * 2)} y2={pad + f * (h - pad * 2)} stroke="var(--line-800)" strokeWidth="1" strokeDasharray="2 4" />
+          <line key={f} x1={pad} x2={w - pad} y1={pad + f * (h - pad * 2)} y2={pad + f * (h - pad * 2)} stroke="var(--line)" strokeWidth="1" strokeDasharray="2 4" />
         ))}
         <path d={bandPath} fill={color} fillOpacity="0.07" stroke="none" />
         <path d={areaPath} fill={`url(#${id})`} stroke="none" />
         <path d={actualPath} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
         <path d={projPath} fill="none" stroke={color} strokeWidth="2" strokeDasharray="5 5" strokeLinecap="round" opacity="0.75" />
-        <line x1={splitX} x2={splitX} y1={pad} y2={h - pad} stroke="var(--line-800)" strokeWidth="1" />
+        <line x1={splitX} x2={splitX} y1={pad} y2={h - pad} stroke="var(--line)" strokeWidth="1" />
       </svg>
       {splitLabel && (
         <div className="mt-1 flex justify-between font-mono text-[10px] text-mut">
@@ -79,7 +79,7 @@ export function TrendChart({
   );
 }
 
-export function Sparkline({ points, color = "var(--signal-gold)", w = 120, h = 32 }: { points: number[]; color?: string; w?: number; h?: number }) {
+export function Sparkline({ points, color = "var(--gold)", w = 120, h = 32 }: { points: number[]; color?: string; w?: number; h?: number }) {
   const min = Math.min(...points);
   const max = Math.max(...points);
   return (
@@ -89,7 +89,7 @@ export function Sparkline({ points, color = "var(--signal-gold)", w = 120, h = 3
   );
 }
 
-const DONUT_COLORS = ["var(--signal-gold)", "var(--flow-cyan)", "var(--stable-green)", "#8991AC", "#56607F", "#3A4468"];
+const DONUT_COLORS = ["var(--gold)", "var(--flow-cyan)", "var(--stable)", "#8991AC", "#56607F", "#3A4468"];
 
 export function Donut({ data, centerLabel, centerValue }: { data: { label: string; value: number; pct?: number }[]; centerLabel: string; centerValue: string }) {
   const total = data.reduce((s, d) => s + d.value, 0);
@@ -119,10 +119,10 @@ export function Donut({ data, centerLabel, centerValue }: { data: { label: strin
           offset += dash;
           return el;
         })}
-        <text x="70" y="66" textAnchor="middle" fill="var(--text-400)" fontSize="9" fontFamily="var(--font-ibm-plex-mono)">
+        <text x="70" y="66" textAnchor="middle" fill="var(--muted)" fontSize="9" fontFamily="var(--font-ibm-plex-mono)">
           {centerLabel}
         </text>
-        <text x="70" y="82" textAnchor="middle" fill="var(--text-100)" fontSize="14" fontWeight="600" fontFamily="var(--font-ibm-plex-mono)">
+        <text x="70" y="82" textAnchor="middle" fill="var(--txt)" fontSize="14" fontWeight="600" fontFamily="var(--font-ibm-plex-mono)">
           {centerValue}
         </text>
       </svg>

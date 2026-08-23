@@ -11,7 +11,7 @@ import { CountUp } from "@/components/ui/CountUp";
 const METRICS = {
   cash: {
     label: "Cash position",
-    color: "var(--signal-gold)" as const,
+    color: "var(--gold)" as const,
     current: CASH.current,
     actual: CASH.actual,
     projected: CASH.projected,
