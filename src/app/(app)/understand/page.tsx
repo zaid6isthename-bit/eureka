@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Check, CircleDashed, Plug } from "lucide-react";
 import Link from "next/link";
+import { PageHeader } from "@/components/app/PageHeader";
 import { Donut } from "@/components/ui/charts";
 import { SkeletonCard } from "@/components/ui/Skeleton";
 import { EXPENSES, INVENTORY, PAYABLES, RECEIVABLES, TOP_PRODUCTS } from "@/lib/mock-data";
@@ -32,14 +33,15 @@ export default function UnderstandPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="font-display text-xl font-semibold tracking-tight text-txt">Understand</h1>
-        <p className="mt-0.5 text-[13px] text-mut">The continuously updated model of your business</p>
-      </div>
+      <PageHeader
+        crumbs={["Home", "Business Model"]}
+        title="Understand"
+        subtitle="The continuously updated model of your business"
+      />
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         <section className="rounded-[10px] border border-line bg-ink-800 xl:col-span-4" aria-label="Connected data sources">
-          <div className="flex items-center justify-between border-b border-line px-4 py-3">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-3">
             <h2 className="text-[12px] font-medium uppercase tracking-wider text-mut">Data sources</h2>
             <span className="font-mono text-[11px] text-mut">4 / 5</span>
           </div>
@@ -109,7 +111,7 @@ export default function UnderstandPage() {
                 </p>
                 <p className="mt-1 text-[12px] text-mut">inventory at cost</p>
               </div>
-              <dl className="grid grid-cols-3 gap-3">
+              <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div><dt className="text-[11px] text-mut">Units</dt><dd className="mt-0.5 font-mono text-[14px] text-txt">{INVENTORY.units.toLocaleString("en-IN")}</dd></div>
                 <div><dt className="text-[11px] text-mut">Avg age</dt><dd className="mt-0.5 font-mono text-[14px] text-txt">{INVENTORY.avgAge}d</dd></div>
                 <div><dt className="text-[11px] text-mut">Overstock</dt><dd className="mt-0.5 font-mono text-[14px] text-gold">{INVENTORY.overstockUnits.toLocaleString("en-IN")}</dd></div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { USERS } from "@/lib/mock-data";
 import { inr } from "@/lib/format";
+import { PageHeader } from "@/components/app/PageHeader";
 
 function Toggle({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {
   return (
@@ -26,10 +27,11 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-3xl space-y-5">
-      <div>
-        <h1 className="font-display text-xl font-semibold tracking-tight text-txt">Settings</h1>
-        <p className="mt-0.5 text-[13px] text-mut">Business profile, team, notifications and billing</p>
-      </div>
+      <PageHeader
+        crumbs={["Home", "Settings"]}
+        title="Settings"
+        subtitle="Business profile, team, notifications and billing"
+      />
 
       <section className="rounded-[10px] border border-line bg-ink-800 p-5" aria-label="Company profile">
         <h2 className="text-[12px] font-medium uppercase tracking-wider text-mut">Company profile</h2>
@@ -53,7 +55,7 @@ export default function SettingsPage() {
       </section>
 
       <section className="rounded-[10px] border border-line bg-ink-800" aria-label="Users and roles">
-        <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-5 py-3.5">
           <h2 className="text-[12px] font-medium uppercase tracking-wider text-mut">Users</h2>
           <button className="rounded-md border border-cyan/50 px-3 py-1 text-[11.5px] font-medium text-cyan transition-colors hover:bg-cyan/10">
             Invite user

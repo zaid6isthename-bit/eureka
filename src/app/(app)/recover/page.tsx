@@ -13,6 +13,7 @@ import { ArrowUpDown, Search } from "lucide-react";
 import { CountUp } from "@/components/ui/CountUp";
 import { Drawer } from "@/components/ui/Drawer";
 import { SkeletonRow } from "@/components/ui/Skeleton";
+import { PageHeader } from "@/components/app/PageHeader";
 import { PIPELINE, RECOVER_ITEMS, SCORE_WEIGHTS, type RecItem, type RecStatus } from "@/lib/mock-data";
 import { inr, lakh } from "@/lib/format";
 
@@ -141,12 +142,13 @@ export default function RecoverPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="font-display text-xl font-semibold tracking-tight text-txt">Recover</h1>
-        <p className="mt-0.5 text-[13px] text-mut">Excess and slow-moving inventory, scored and matched to B2B buyers</p>
-      </div>
+      <PageHeader
+        crumbs={["Home", "Recovery"]}
+        title="Recover"
+        subtitle="Excess and slow-moving inventory, scored and matched to B2B buyers"
+      />
 
-      <section className="grid grid-cols-2 gap-4 rounded-[10px] border border-line bg-ink-800 p-4 lg:grid-cols-4" aria-label="Recovery pipeline summary">
+      <section className="grid grid-cols-2 gap-4 rounded-[10px] border border-line bg-ink-800 p-4 sm:grid-cols-4" aria-label="Recovery pipeline summary">
         <div>
           <p className="text-[11px] uppercase tracking-wider text-mut">Items tracked</p>
           <p className="mt-1 font-mono text-[26px] font-medium leading-none text-txt">

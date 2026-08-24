@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Drawer } from "@/components/ui/Drawer";
 import { SkeletonRow } from "@/components/ui/Skeleton";
+import { PageHeader } from "@/components/app/PageHeader";
 import { ALERTS, type Alert, type Severity } from "@/lib/mock-data";
 import { monoDate } from "@/lib/format";
 
@@ -69,38 +70,42 @@ export default function DetectPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="font-display text-xl font-semibold tracking-tight text-txt">Detect</h1>
-        <p className="mt-0.5 text-[13px] text-mut">Cross-system findings invisible in any single tool</p>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2">
-        <div role="group" aria-label="Filter severity" className="flex gap-1.5">
-          {(["All", "high", "medium", "low"] as const).map((s) => (
-            <button
-              key={s}
-              onClick={() => setSevFilter(s)}
-              aria-pressed={sevFilter === s}
-              className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[11.5px] transition-colors ${
-                sevFilter === s ? "border-gold/60 bg-gold/10 font-medium text-gold" : "border-line text-mut hover:bg-ink-750 hover:text-txt"
-              }`}
+      <PageHeader
+        crumbs={["Home", "Alerts"]}
+        title="Detect"
+        subtitle="Cross-system findings invisible in any single tool"
+        actions={
+          <>
+            <div role="group" aria-label="Filter severity" className="flex flex-wrap gap-1.5">
+              {(["All", "high", "medium", "low"] as const).map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setSevFilter(s)}
+                  aria-pressed={sevFilter === s}
+                  className={`flex h-10 items-center gap-1.5 rounded-[var(--radius-pill)] px-3.5 text-[12.5px] shadow-sm transition-colors ${
+                    sevFilter === s
+                      ? "bg-ink-950 font-bold text-bg"
+                      : "border border-border bg-card text-mut hover:text-txt"
+                  }`}
+                >
+                  {s !== "All" && <span className={`h-1.5 w-1.5 rounded-full ${sevMeta[s].dot}`} />}
+                  {s === "All" ? "All" : sevMeta[s].label}
+                </button>
+              ))}
+            </div>
+            <select
+              value={areaFilter}
+              onChange={(e) => setAreaFilter(e.target.value as (typeof AREAS)[number])}
+              aria-label="Filter area"
+              className="h-10 rounded-[var(--radius-pill)] border border-border bg-card px-4 text-[13px] text-txt shadow-sm focus:outline-none"
             >
-              {s !== "All" && <span className={`h-1.5 w-1.5 rounded-full ${sevMeta[s].dot}`} />}
-              {s === "All" ? "All" : sevMeta[s].label}
-            </button>
-          ))}
-        </div>
-        <select
-          value={areaFilter}
-          onChange={(e) => setAreaFilter(e.target.value as (typeof AREAS)[number])}
-          aria-label="Filter area"
-          className="ml-auto h-8 rounded-md border border-line bg-ink-800 px-2 text-[12px] text-txt focus:border-cyan/50 focus:outline-none"
-        >
-          {AREAS.map((a) => (
-            <option key={a} value={a}>{a === "All" ? "All areas" : a}</option>
-          ))}
-        </select>
-      </div>
+              {AREAS.map((a) => (
+                <option key={a} value={a}>{a === "All" ? "All areas" : a}</option>
+              ))}
+            </select>
+          </>
+        }
+      />
 
       <div className="overflow-hidden rounded-[10px] border border-line bg-ink-800">
         <div className="overflow-x-auto">

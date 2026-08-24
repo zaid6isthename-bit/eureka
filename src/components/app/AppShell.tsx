@@ -19,8 +19,10 @@ import {
   Headphones,
   Sun,
   Moon,
+  Search,
 } from "lucide-react";
 import { ALERTS, COMPANY } from "@/lib/mock-data";
+import { CommandPalette } from "@/components/app/CommandPalette";
 
 const NAV_MAIN = [
   { href: "/", label: "Overview", icon: LayoutDashboard },
@@ -34,7 +36,26 @@ const NAV_MAIN = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setPaletteOpen((v) => !v);
+      }
+    };
+    const onOpenPalette = () => setPaletteOpen(true);
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("rc:palette", onOpenPalette);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("rc:palette", onOpenPalette);
+    };
+  }, []);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("reclaim-theme");
@@ -97,6 +118,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <span className="my-2 block h-px w-6 bg-line" role="separator" />
 
           {/* Utilities */}
+          <button
+            onClick={() => setPaletteOpen(true)}
+            aria-label="Search — Command K"
+            title="Search · ⌘K"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-mut transition-colors hover:bg-bg-subtle hover:text-txt"
+          >
+            <Search size={17} strokeWidth={1.8} />
+          </button>
           <Link
             href="/detect"
             aria-label={`Notifications — ${ALERTS.length} open alerts`}
@@ -115,7 +144,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Mail size={17} strokeWidth={1.8} />
           </Link>
           <button
-            onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
+            onClick={toggleTheme}
             aria-label="Toggle theme"
             aria-pressed={theme === "dark"}
             title={theme === "light" ? "Switch to dark theme" : "Switch to light theme"}
@@ -199,6 +228,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {/* ===== MAIN CONTENT ===== */}
         <main className="min-w-0 flex-1 pb-4">{children}</main>
       </div>
+
+      <CommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        onToggleTheme={toggleTheme}
+        theme={theme}
+      />
     </div>
   );
 }

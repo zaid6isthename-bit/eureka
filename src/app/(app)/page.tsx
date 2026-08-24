@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Search } from "lucide-react";
+import { PageHeader, HeaderIconBtn } from "@/components/app/PageHeader";
 import { CountUp } from "@/components/ui/CountUp";
 import { Sparkline, TrendChart } from "@/components/ui/charts";
 import { Skeleton, SkeletonCard, SkeletonRow } from "@/components/ui/Skeleton";
@@ -34,10 +35,19 @@ export default function OverviewPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="font-display text-xl font-semibold tracking-tight text-txt">Overview</h1>
-        <p className="mt-0.5 text-[13px] text-mut">Monday, 24 Aug &middot; data synced 2 min ago</p>
-      </div>
+      <PageHeader
+        crumbs={["Home", "Dashboard"]}
+        title="Overview"
+        subtitle="Monday, 24 Aug &middot; data synced 2 min ago"
+        actions={
+          <HeaderIconBtn
+            label="Search — Command K"
+            onClick={() => window.dispatchEvent(new Event("rc:palette"))}
+          >
+            <Search size={16} />
+          </HeaderIconBtn>
+        }
+      />
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-12">
         {loading ? (
@@ -86,7 +96,7 @@ export default function OverviewPage() {
             </section>
 
             <section className="rounded-[10px] border border-line bg-ink-800 xl:col-span-4" aria-label="Active alerts">
-              <div className="flex items-center justify-between border-b border-line px-4 py-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-3">
                 <h2 className="text-[12px] font-medium uppercase tracking-wider text-mut">Active alerts</h2>
                 <Link href="/detect" className="font-mono text-[11px] text-cyan transition-colors hover:text-txt">
                   View all

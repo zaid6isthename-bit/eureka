@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check, X, PenLine } from "lucide-react";
 import { CountUp } from "@/components/ui/CountUp";
+import { PageHeader } from "@/components/app/PageHeader";
 import { RECOMMENDATIONS, type Recommendation } from "@/lib/mock-data";
 import { lakh } from "@/lib/format";
 
@@ -93,10 +94,11 @@ export default function RecommendPage() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="font-display text-xl font-semibold tracking-tight text-txt">Recommend</h1>
-        <p className="mt-0.5 text-[13px] text-mut">Triage the queue &mdash; accept, adjust, or dismiss</p>
-      </div>
+      <PageHeader
+        crumbs={["Home", "Actions"]}
+        title="Recommend"
+        subtitle="Triage the queue &mdash; accept, adjust, or dismiss"
+      />
 
       {inProgress.length > 0 && (
         <section aria-label="In progress">

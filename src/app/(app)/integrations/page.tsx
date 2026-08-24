@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { RefreshCw, Link2, Link2Off } from "lucide-react";
 import { INTEGRATIONS, type Integration } from "@/lib/mock-data";
+import { PageHeader } from "@/components/app/PageHeader";
 
 function StatusLine({ s }: { s: Integration }) {
   if (s.status === "connected")
@@ -28,10 +29,11 @@ export default function IntegrationsPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="font-display text-xl font-semibold tracking-tight text-txt">Integrations</h1>
-        <p className="mt-0.5 text-[13px] text-mut">Read-only connections. Bank-level encryption, revoke anytime.</p>
-      </div>
+      <PageHeader
+        crumbs={["Home", "Connections"]}
+        title="Integrations"
+        subtitle="Read-only connections. Bank-level encryption, revoke anytime."
+      />
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {items.map((i) => (

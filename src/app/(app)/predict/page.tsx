@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { TrendChart } from "@/components/ui/charts";
 import { SkeletonCard } from "@/components/ui/Skeleton";
+import { PageHeader } from "@/components/app/PageHeader";
 import { CASH, INVENTORY_TREND, PREDICTIONS } from "@/lib/mock-data";
 import { useLiveSeries } from "@/lib/use-live-series";
 import { lakh } from "@/lib/format";
@@ -47,10 +48,11 @@ export default function PredictPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="font-display text-xl font-semibold tracking-tight text-txt">Predict</h1>
-        <p className="mt-0.5 text-[13px] text-mut">Forward projections with confidence bands</p>
-      </div>
+      <PageHeader
+        crumbs={["Home", "Forecast"]}
+        title="Predict"
+        subtitle="Forward projections with confidence bands"
+      />
 
       <section className="rounded-[10px] border border-line bg-ink-800 p-4" aria-label="Primary forecast">
         <div className="flex flex-wrap items-center justify-between gap-3">
