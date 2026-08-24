@@ -214,3 +214,27 @@ h3, .h3 { font-family: var(--font-space-grotesk), system-ui, sans-serif; font-si
 ::-webkit-scrollbar-track { background: var(--bg-subtle); }
 ::-webkit-scrollbar-thumb { background: var(--signal-green-border); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--signal-green); }
+
+/* ============================================================
+   FENCO FINANCE DASHBOARD TOKENS
+   ============================================================ */
+.fenco {
+  --bg-canvas: #E7E7E5;
+  --surface-1: #F2F1EF;
+  --surface-2: #FFFFFF;
+  --surface-dark: #16171A;
+  --text-primary: #16171A;
+  --text-secondary: #8B8D98;
+  --text-inverse: #FFFFFF;
+  --accent-1: #8CA0F7;
+  --accent-2: #EADD8C;
+  --accent-3: #9FD8C9;
+  --accent-danger: #E37B7B;
+  --accent-success: #7FBF8F;
+  --border-subtle: #E7E7E5;
+  --radius-shell: 32px;
+  --radius-card: 20px;
+  --radius-pill: 999px;
+  --shadow-soft: 0 8px 24px rgba(0,0,0,0.06);
+  font-family: "Inter", system-ui, sans-serif;
+}
