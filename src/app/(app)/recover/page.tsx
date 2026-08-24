@@ -14,6 +14,8 @@ import { CountUp } from "@/components/ui/CountUp";
 import { Drawer } from "@/components/ui/Drawer";
 import { SkeletonRow } from "@/components/ui/Skeleton";
 import { PageHeader } from "@/components/app/PageHeader";
+import { toast } from "@/components/app/toast";
+import { usePersistentState } from "@/lib/use-persistent-state";
 import { PIPELINE, RECOVER_ITEMS, SCORE_WEIGHTS, type RecItem, type RecStatus } from "@/lib/mock-data";
 import { inr, lakh } from "@/lib/format";
 
@@ -52,7 +54,7 @@ function ScoreCell({ score }: { score: number }) {
 }
 
 export default function RecoverPage() {
-  const [items, setItems] = useState<RecItem[]>(RECOVER_ITEMS);
+  const [items, setItems] = usePersistentState<RecItem[]>("rc-recover", RECOVER_ITEMS);
   const [sorting, setSorting] = useState<SortingState>([{ id: "score", desc: true }]);
   const [statusFilter, setStatusFilter] = useState<RecStatus | "All">("All");
   const [query, setQuery] = useState("");
@@ -137,8 +139,10 @@ export default function RecoverPage() {
 
   const openItem = items.find((i) => i.id === selected?.id) ?? selected;
 
-  const startRecovery = (id: string) =>
+  const startRecovery = (id: string) => {
     setItems((list) => list.map((i) => (i.id === id ? { ...i, status: "Listed" } : i)));
+    toast("Listed on the marketplace", { description: "B2B buyers are being matched now — expect offers within 48h." });
+  };
 
   return (
     <div className="space-y-4">

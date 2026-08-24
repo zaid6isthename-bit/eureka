@@ -58,3 +58,27 @@ export function HeaderIconBtn({
     </button>
   );
 }
+
+export function HeaderPillBtn({
+  variant = "primary",
+  onClick,
+  children,
+}: {
+  variant?: "primary" | "ghost";
+  onClick?: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex h-10 shrink-0 items-center gap-2 rounded-[var(--radius-pill)] px-4 text-[13px] shadow-sm transition-all ${
+        variant === "primary"
+          ? "bg-ink-950 font-bold text-bg hover:opacity-90"
+          : "border border-border bg-card font-medium text-txt hover:bg-ink-750"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}

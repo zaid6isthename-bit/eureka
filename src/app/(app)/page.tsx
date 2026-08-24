@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDownRight, ArrowUpRight, Search } from "lucide-react";
-import { PageHeader, HeaderIconBtn } from "@/components/app/PageHeader";
+import { ArrowDownRight, ArrowUpRight, Plus, Search } from "lucide-react";
+import { PageHeader, HeaderIconBtn, HeaderPillBtn } from "@/components/app/PageHeader";
+import { toast } from "@/components/app/toast";
+import { usePersistentState } from "@/lib/use-persistent-state";
 import { CountUp } from "@/components/ui/CountUp";
 import { Sparkline, TrendChart } from "@/components/ui/charts";
 import { Skeleton, SkeletonCard, SkeletonRow } from "@/components/ui/Skeleton";
@@ -16,7 +18,7 @@ const sevColor = { high: "bg-risk", medium: "bg-gold", low: "bg-cyan" } as const
 export default function OverviewPage() {
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState<30 | 90>(90);
-  const [actions, setActions] = useState(RECOMMENDATIONS.slice(0, 3));
+  const [actions, setActions] = usePersistentState("rc-overview-actions", RECOMMENDATIONS.slice(0, 3));
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 450);
@@ -30,8 +32,11 @@ export default function OverviewPage() {
 
   const actual = liveCash;
 
-  const act = (id: string, status: "accepted" | "dismissed") =>
+  const act = (id: string, status: "accepted" | "dismissed") => {
     setActions((as) => as.map((a) => (a.id === id ? { ...a, status } : a)));
+    if (status === "accepted") toast("Action accepted", { description: "Tracking started — impact will update as data comes in." });
+    else toast("Action dismissed", { kind: "info" });
+  };
 
   return (
     <div className="space-y-4">
@@ -40,12 +45,26 @@ export default function OverviewPage() {
         title="Overview"
         subtitle="Monday, 24 Aug &middot; data synced 2 min ago"
         actions={
-          <HeaderIconBtn
-            label="Search — Command K"
-            onClick={() => window.dispatchEvent(new Event("rc:palette"))}
-          >
-            <Search size={16} />
-          </HeaderIconBtn>
+          <>
+            <HeaderIconBtn
+              label="Search — Command K"
+              onClick={() => window.dispatchEvent(new Event("rc:palette"))}
+            >
+              <Search size={16} />
+            </HeaderIconBtn>
+            <HeaderPillBtn
+              variant="primary"
+              onClick={() =>
+                toast("Report queued", {
+                  description: "Weekly Capital Report will be ready in a few minutes.",
+                  kind: "info",
+                })
+              }
+            >
+              <Plus size={15} strokeWidth={2.5} />
+              New Report
+            </HeaderPillBtn>
+          </>
         }
       />
 

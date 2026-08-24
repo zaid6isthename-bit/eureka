@@ -204,6 +204,13 @@ h3, .h3 { font-family: var(--font-space-grotesk), system-ui, sans-serif; font-si
 /* --- Fenco card radius: all 10px tiles become 20px widget cards --- */
 .rounded-\[10px\] { border-radius: var(--radius-card, 20px); }
 
+/* --- Toast entrance --- */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.toast-in { animation: toast-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
 /* --- Reduced Motion --- */
 @media (prefers-reduced-motion: reduce) {
   .no-anim * {

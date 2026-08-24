@@ -6,6 +6,8 @@ import { ArrowRight } from "lucide-react";
 import { Drawer } from "@/components/ui/Drawer";
 import { SkeletonRow } from "@/components/ui/Skeleton";
 import { PageHeader } from "@/components/app/PageHeader";
+import { toast } from "@/components/app/toast";
+import { usePersistentState } from "@/lib/use-persistent-state";
 import { ALERTS, type Alert, type Severity } from "@/lib/mock-data";
 import { monoDate } from "@/lib/format";
 
@@ -44,7 +46,7 @@ function TriggerBar({ labelA, labelB, aPct, bPct }: { labelA: string; labelB: st
 }
 
 export default function DetectPage() {
-  const [alerts, setAlerts] = useState<Alert[]>(ALERTS);
+  const [alerts, setAlerts] = usePersistentState<Alert[]>("rc-alerts", ALERTS);
   const [sevFilter, setSevFilter] = useState<Severity | "All">("All");
   const [areaFilter, setAreaFilter] = useState<(typeof AREAS)[number]>("All");
   const [selected, setSelected] = useState<Alert | null>(null);
@@ -65,8 +67,11 @@ export default function DetectPage() {
 
   const open = alerts.find((a) => a.id === selected?.id) ?? null;
 
-  const setStatus = (id: string, status: Alert["status"]) =>
+  const setStatus = (id: string, status: Alert["status"]) => {
     setAlerts((list) => list.map((a) => (a.id === id ? { ...a, status } : a)));
+    if (status === "resolved") toast("Alert resolved", { description: "Nice — one less leak to worry about." });
+    else if (status === "acknowledged") toast("Acknowledged", { kind: "info", description: "We'll keep watching this one." });
+  };
 
   return (
     <div className="space-y-4">

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
@@ -23,6 +23,14 @@ import {
 } from "lucide-react";
 import { ALERTS, COMPANY } from "@/lib/mock-data";
 import { CommandPalette } from "@/components/app/CommandPalette";
+import { Toaster } from "@/components/app/toast";
+import { readSession, signOut as clearSession } from "@/lib/use-persistent-state";
+
+const SEV_DOT: Record<string, string> = {
+  high: "bg-risk",
+  medium: "bg-gold",
+  low: "bg-flow-cyan",
+};
 
 const NAV_MAIN = [
   { href: "/", label: "Overview", icon: LayoutDashboard },
@@ -35,9 +43,31 @@ const NAV_MAIN = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [bellOpen, setBellOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [session, setSession] = useState<{ name: string; email: string } | null>(null);
+
+  useEffect(() => {
+    setSession(readSession());
+  }, []);
+
+  const displayName = session?.name ?? COMPANY.owner;
+  const displayEmail = session?.email ?? COMPANY.name;
+  const initials = displayName
+    .split(" ")
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
+  const handleSignOut = () => {
+    setMenuOpen(false);
+    clearSession();
+    router.push("/login");
+  };
 
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
 
@@ -126,15 +156,74 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           >
             <Search size={17} strokeWidth={1.8} />
           </button>
-          <Link
-            href="/detect"
-            aria-label={`Notifications — ${ALERTS.length} open alerts`}
-            title="Alerts"
-            className="relative flex h-10 w-10 items-center justify-center rounded-full text-mut transition-colors hover:bg-bg-subtle hover:text-txt"
-          >
-            <Bell size={17} strokeWidth={1.8} />
-            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-risk" />
-          </Link>
+
+          {/* Notifications */}
+          <div className="relative">
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+                setBellOpen((v) => !v);
+              }}
+              aria-haspopup="menu"
+              aria-expanded={bellOpen}
+              aria-label={`Notifications — ${ALERTS.length} open alerts`}
+              title="Alerts"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full text-mut transition-colors hover:bg-bg-subtle hover:text-txt"
+            >
+              <Bell size={17} strokeWidth={1.8} />
+              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-risk" />
+            </button>
+
+            {bellOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-50"
+                  onClick={() => setBellOpen(false)}
+                  aria-hidden="true"
+                />
+                <div
+                  role="menu"
+                  aria-label="Notifications"
+                  className="absolute left-12 top-0 z-50 w-[320px] overflow-hidden rounded-[var(--radius-card)] border border-line bg-card shadow-xl"
+                >
+                  <div className="flex items-center justify-between border-b border-line px-4 py-3">
+                    <p className="text-[13px] font-semibold text-txt">Alerts</p>
+                    <span className="rounded-full bg-risk/10 px-2 py-0.5 font-mono text-[10px] text-risk">
+                      {ALERTS.length} open
+                    </span>
+                  </div>
+                  <ul className="divide-y divide-line">
+                    {ALERTS.slice(0, 4).map((a) => (
+                      <li key={a.id}>
+                        <Link
+                          href="/detect"
+                          role="menuitem"
+                          onClick={() => setBellOpen(false)}
+                          className="flex gap-3 px-4 py-3 transition-colors hover:bg-ink-750"
+                        >
+                          <span className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${SEV_DOT[a.severity] ?? "bg-flow-cyan"}`} />
+                          <span className="min-w-0">
+                            <span className="block truncate text-[12.5px] font-medium text-txt">{a.title}</span>
+                            <span className="mt-0.5 block font-mono text-[10.5px] text-mut">
+                              {a.code} · {a.area}
+                            </span>
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href="/detect"
+                    onClick={() => setBellOpen(false)}
+                    className="block border-t border-line px-4 py-3 text-center text-[12.5px] font-medium text-signal-green transition-colors hover:bg-ink-750"
+                  >
+                    View all alerts →
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
+
           <Link
             href="/integrations"
             aria-label="Mail"
@@ -156,15 +245,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {/* Account */}
           <div className="relative mt-1">
             <button
-              onClick={() => setMenuOpen((v) => !v)}
+              onClick={() => {
+                setBellOpen(false);
+                setMenuOpen((v) => !v);
+              }}
               aria-haspopup="menu"
               aria-expanded={menuOpen}
               aria-label="Account menu"
-              title={`${COMPANY.owner} — ${COMPANY.name}`}
+              title={`${displayName} — ${COMPANY.name}`}
               className={`flex h-10 w-10 items-center justify-center rounded-full bg-flow-cyan-light font-brand text-[13px] font-bold text-txt transition-transform hover:scale-105`}
               style={menuOpen ? { boxShadow: "0 0 0 2px var(--signal-green)" } : undefined}
             >
-              {COMPANY.ownerInitials}
+              {initials}
             </button>
 
             {menuOpen && (
@@ -179,8 +271,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   className="absolute left-12 top-0 z-50 w-60 overflow-hidden rounded-[var(--radius-card)] border border-line bg-card shadow-xl"
                 >
                   <div className="border-b border-line px-4 py-3">
-                    <p className="truncate text-[13px] font-medium text-txt">{COMPANY.owner}</p>
-                    <p className="truncate text-[11px] text-mut">{COMPANY.name}</p>
+                    <p className="truncate text-[13px] font-medium text-txt">{displayName}</p>
+                    <p className="truncate text-[11px] text-mut">{displayEmail}</p>
                   </div>
                   <Link
                     href="/settings"
@@ -203,7 +295,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <div className="border-t border-line">
                     <button
                       role="menuitem"
-                      onClick={() => setMenuOpen(false)}
+                      onClick={handleSignOut}
                       className="w-full px-4 py-2.5 text-left text-[12.5px] text-risk transition-colors hover:bg-risk/10"
                     >
                       Sign out
@@ -235,6 +327,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         onToggleTheme={toggleTheme}
         theme={theme}
       />
+
+      <Toaster />
     </div>
   );
 }

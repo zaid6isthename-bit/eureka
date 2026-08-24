@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Check, X, PenLine } from "lucide-react";
 import { CountUp } from "@/components/ui/CountUp";
 import { PageHeader } from "@/components/app/PageHeader";
+import { toast } from "@/components/app/toast";
+import { usePersistentState } from "@/lib/use-persistent-state";
 import { RECOMMENDATIONS, type Recommendation } from "@/lib/mock-data";
 import { lakh } from "@/lib/format";
 
@@ -83,10 +85,13 @@ function ActionCard({
 }
 
 export default function RecommendPage() {
-  const [recs, setRecs] = useState<Recommendation[]>(RECOMMENDATIONS);
+  const [recs, setRecs] = usePersistentState<Recommendation[]>("rc-recs", RECOMMENDATIONS);
 
-  const update = (id: string, patch: Partial<Recommendation>) =>
+  const update = (id: string, patch: Partial<Recommendation>) => {
     setRecs((list) => list.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+    if (patch.status === "accepted") toast("Action accepted", { description: "Moved to In progress — we'll track the impact." });
+    else if (patch.status === "dismissed") toast("Action dismissed", { kind: "info", description: "You can undo this from the archive." });
+  };
 
   const inProgress = recs.filter((r) => r.status === "accepted");
   const queue = recs.filter((r) => r.status === "pending");

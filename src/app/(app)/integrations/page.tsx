@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { RefreshCw, Link2, Link2Off } from "lucide-react";
 import { INTEGRATIONS, type Integration } from "@/lib/mock-data";
 import { PageHeader } from "@/components/app/PageHeader";
+import { toast } from "@/components/app/toast";
+import { usePersistentState } from "@/lib/use-persistent-state";
 
 function StatusLine({ s }: { s: Integration }) {
   if (s.status === "connected")
@@ -22,10 +23,16 @@ function StatusLine({ s }: { s: Integration }) {
 }
 
 export default function IntegrationsPage() {
-  const [items, setItems] = useState(INTEGRATIONS);
+  const [items, setItems] = usePersistentState("rc-integrations", INTEGRATIONS);
 
-  const setStatus = (id: string, status: Integration["status"]) =>
+  const setStatus = (id: string, status: Integration["status"]) => {
     setItems((list) => list.map((i) => (i.id === id ? { ...i, status, lastSync: status === "connected" ? "just now" : i.lastSync } : i)));
+    const item = items.find((i) => i.id === id);
+    const name = item?.name ?? "Connection";
+    if (status === "connected") toast(`${name} connected`, { description: "First sync usually completes within a minute." });
+    else if (status === "not_connected") toast(`${name} disconnected`, { kind: "info", description: "Read-only access revoked." });
+    else toast(`${name} syncing`, { description: "Pulling the latest data now.", kind: "info" });
+  };
 
   return (
     <div className="space-y-4">
