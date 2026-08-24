@@ -73,7 +73,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-bg p-4">
       <div className="grid w-full max-w-4xl overflow-hidden rounded-[32px] border border-border bg-card shadow-xl md:grid-cols-2">
         {/* Brand panel */}
-        <div className="relative hidden flex-col justify-between overflow-hidden bg-ink-950 p-8 text-white md:flex">
+        <div className="relative hidden flex-col justify-between overflow-hidden bg-[#16171A] p-8 text-white md:flex">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 opacity-[0.14]"
@@ -85,7 +85,7 @@ export default function LoginPage() {
           />
           <div className="relative">
             <Image src="/reclaim-dark.png" alt="RECLAIM" width={40} height={40} className="rounded-xl" />
-            <h1 className="mt-6 font-display text-[30px] font-bold leading-tight tracking-tight">
+            <h1 className="mt-6 font-display text-[30px] font-bold leading-tight tracking-tight text-white">
               Every rupee,
               <br />
               accounted for.
