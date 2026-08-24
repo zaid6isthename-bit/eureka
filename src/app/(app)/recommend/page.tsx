@@ -24,26 +24,37 @@ function ActionCard({
   const [draft, setDraft] = useState(rec.impact);
 
   return (
-    <article className="rounded-[10px] border border-line bg-ink-800 p-4 transition-colors hover:bg-ink-750/50">
+    <article
+      className={`rounded-[10px] border p-4 transition-colors ${
+        rec.status === "accepted"
+          ? "border-stable/40 bg-stable/5"
+          : "border-line bg-ink-800 hover:bg-ink-750/50"
+      }`}
+    >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="font-mono text-[10.5px] text-mut">{rec.code}</span>
             <span className="rounded border border-line px-1.5 py-px font-mono text-[9.5px] text-mut">{rec.source}</span>
+            {rec.status === "accepted" && (
+              <span className="flex items-center gap-1 rounded-full border border-stable/40 bg-stable/10 px-2 py-0.5 font-mono text-[9.5px] text-stable">
+                <span className="h-1 w-1 rounded-full bg-stable live-dot" /> In progress
+              </span>
+            )}
           </div>
           <p className="mt-1.5 text-[14px] font-medium leading-snug text-txt">{rec.action}</p>
           <p className="mt-1 text-[12.5px] leading-relaxed text-mut">{rec.reasoning}</p>
         </div>
         <div className="text-right">
           <p className="font-mono text-[20px] font-medium leading-none text-gold">
-            +<CountUp value={rec.impact} format={lakh} />
+            +<CountUp key={rec.impact} value={rec.impact} format={lakh} />
           </p>
           <p className="mt-1 font-mono text-[10px] text-mut">projected impact</p>
         </div>
       </div>
 
       {editing ? (
-        <div className="mt-4 flex items-center gap-2 border-t border-line pt-3">
+        <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-line pt-3">
           <span className="text-[12px] text-mut">Adjusted impact</span>
           <input
             type="number"
@@ -52,11 +63,11 @@ function ActionCard({
             step={10000}
             onChange={(e) => setDraft(Number(e.target.value))}
             aria-label="Adjusted impact in rupees"
-            className="h-8 w-36 rounded-md border border-line bg-ink-900 px-2 font-mono text-[12px] text-txt focus:border-cyan/50 focus:outline-none"
+            className="h-8 w-36 rounded-md border border-line bg-ink-900 px-2 font-mono text-[12px] text-txt focus:border-flow-cyan/50 focus:outline-none"
           />
           <button
             onClick={() => { onModify(draft); setEditing(false); }}
-            className="rounded-md border border-cyan/50 px-3 py-1.5 text-[11.5px] font-medium text-cyan transition-colors hover:bg-cyan/10"
+            className="rounded-md border border-flow-cyan/50 px-3 py-1.5 text-[11.5px] font-medium text-flow-cyan transition-colors hover:bg-flow-cyan/10"
           >
             Save
           </button>
@@ -65,6 +76,15 @@ function ActionCard({
             className="rounded-md border border-line px-3 py-1.5 text-[11.5px] text-mut transition-colors hover:bg-ink-750"
           >
             Cancel
+          </button>
+        </div>
+      ) : rec.status === "accepted" ? (
+        <div className="mt-4 flex gap-2 border-t border-line pt-3">
+          <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 rounded-md border border-line px-3 py-1.5 text-[12px] text-mut transition-colors hover:bg-ink-750 hover:text-txt">
+            <PenLine size={12} /> Adjust impact
+          </button>
+          <button onClick={onDismiss} className="ml-auto rounded-md border border-line px-3 py-1.5 text-[12px] text-mut transition-colors hover:bg-ink-750 hover:text-txt">
+            Move back to queue
           </button>
         </div>
       ) : (
@@ -116,7 +136,7 @@ export default function RecommendPage() {
                 key={r.id}
                 rec={r}
                 onAccept={() => {}}
-                onDismiss={() => update(r.id, { status: "pending" })}
+                onDismiss={() => update(r.id, { status: "pending", impact: r.impact })}
                 onModify={(impact) => update(r.id, { impact })}
               />
             ))}
