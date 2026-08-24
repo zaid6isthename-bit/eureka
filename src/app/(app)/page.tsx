@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Plus, Search } from "lucide-react";
 import { PageHeader, HeaderIconBtn, HeaderPillBtn } from "@/components/app/PageHeader";
+import { ScoreDial, tierLabel } from "@/components/app/ScoreDial";
+import { seedCandidates } from "@/lib/recovery-score";
 import { toast } from "@/components/app/toast";
 import { usePersistentState } from "@/lib/use-persistent-state";
 import { CountUp } from "@/components/ui/CountUp";
@@ -11,7 +13,7 @@ import { Sparkline, TrendChart } from "@/components/ui/charts";
 import { Skeleton, SkeletonCard, SkeletonRow } from "@/components/ui/Skeleton";
 import { ALERTS, CASH, HEALTH, RECOMMENDATIONS, TRAPPED } from "@/lib/mock-data";
 import { useLiveSeries } from "@/lib/use-live-series";
-import { lakh, monoDate } from "@/lib/format";
+import { inr, lakh, monoDate } from "@/lib/format";
 
 const sevColor = { high: "bg-risk", medium: "bg-gold", low: "bg-cyan" } as const;
 
@@ -29,6 +31,11 @@ export default function OverviewPage() {
   const liveCash = useLiveSeries(cashSeed);
   const liveSpark = useLiveSeries(HEALTH.spark, 4000);
   const cashNow = liveCash[liveCash.length - 1];
+
+  const topCandidate = useMemo(
+    () => [...seedCandidates()].sort((a, b) => b.score - a.score)[0],
+    []
+  );
 
   const actual = liveCash;
 
@@ -210,6 +217,62 @@ export default function OverviewPage() {
             </Link>
           </div>
         </section>
+
+        {/* Signature feature cross-sell: Recovery Score™ */}
+        {topCandidate && (
+          <section
+            className="rounded-[10px] border border-line bg-ink-800 p-4 xl:col-span-12"
+            aria-label="Top recovery candidate"
+          >
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+              <div className="flex min-w-0 items-center gap-4">
+                <ScoreDial score={topCandidate.score} size={64} />
+                <div className="min-w-0">
+                  <h2 className="text-[11px] font-medium uppercase tracking-wider text-mut">
+                    Top Recovery Score™ candidate
+                  </h2>
+                  <p className="mt-1 truncate text-[15px] font-semibold leading-snug text-txt">
+                    {topCandidate.name}
+                  </p>
+                  <p className="font-mono text-[11px] text-mut">
+                    {topCandidate.sku} · {topCandidate.qty.toLocaleString("en-IN")} units ·{" "}
+                    <span className={`font-sans font-semibold uppercase tracking-wide ${tierLabel(topCandidate.tier)}`}>
+                      {topCandidate.tier}
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              <dl className="flex flex-wrap items-center gap-x-8 gap-y-3">
+                <div>
+                  <dt className="text-[10.5px] uppercase tracking-wider text-mut">Est. net return</dt>
+                  <dd className="mt-0.5 font-mono text-[19px] font-medium leading-none text-gold">
+                    {inr(topCandidate.economics.net)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[10.5px] uppercase tracking-wider text-mut">ROI</dt>
+                  <dd className="mt-0.5 font-mono text-[19px] font-medium leading-none text-stable">
+                    {topCandidate.economics.roiPct}%
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[10.5px] uppercase tracking-wider text-mut">Liquidation</dt>
+                  <dd className="mt-0.5 font-mono text-[19px] font-medium leading-none text-txt">
+                    ~{topCandidate.economics.daysToLiquidate}d
+                  </dd>
+                </div>
+              </dl>
+
+              <Link
+                href="/recover"
+                className="ml-auto flex h-10 shrink-0 items-center rounded-full bg-ink-950 px-5 text-[13px] font-bold text-bg transition-opacity hover:opacity-90"
+              >
+                Review &amp; recover
+              </Link>
+            </div>
+          </section>
+        )}
       </div>
 
       {loading && (
