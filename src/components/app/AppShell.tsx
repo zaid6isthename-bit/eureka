@@ -23,6 +23,8 @@ import {
   Sun,
   Moon,
   PanelLeft,
+  CreditCard,
+  PieChart,
 } from "lucide-react";
 import { CountUp } from "@/components/ui/CountUp";
 import { ALERTS, COMPANY, HEALTH } from "@/lib/mock-data";
@@ -39,6 +41,11 @@ const NAV_MAIN = [
 const NAV_FOOTER = [
   { href: "/integrations", label: "Integrations", icon: Plug },
   { href: "/settings", label: "Settings", icon: Settings },
+];
+
+const NAV_DESIGNS = [
+  { href: "/fenco/personal", label: "Fenco Personal", icon: CreditCard },
+  { href: "/fenco/overview", label: "Fenco Overview", icon: PieChart },
 ];
 
 function healthDotColor(score: number) {
@@ -179,6 +186,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {NAV_MAIN.map(navItem)}
           <div className="my-4 border-t border-line" role="separator" />
           {NAV_FOOTER.map(navItem)}
+          {!collapsed && (
+            <>
+              <div className="my-4 border-t border-line" role="separator" />
+              <p className="px-3 pb-1 text-[10px] font-medium uppercase tracking-wider text-mut">
+                UI Designs
+              </p>
+            </>
+          )}
+          {NAV_DESIGNS.map(navItem)}
         </nav>
 
         {collapsed && (
