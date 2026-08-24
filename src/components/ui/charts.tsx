@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, type MouseEvent as ReactMouseEvent } from "react";
+
 function path(points: number[], w: number, h: number, pad: number, min: number, max: number): string {
   const range = max - min || 1;
   const step = (w - pad * 2) / (points.length - 1);
@@ -26,6 +28,8 @@ export function TrendChart({
   color = "var(--gold)",
   height = 160,
   splitLabel,
+  live = false,
+  formatValue,
 }: {
   actual: number[];
   projected: number[];
@@ -33,12 +37,30 @@ export function TrendChart({
   color?: string;
   height?: number;
   splitLabel?: [string, string];
+  live?: boolean;
+  formatValue?: (n: number) => string;
 }) {
   const w = 560;
   const h = height;
   const pad = 8;
   const { min, max } = bounds(actual, projected, bandPct);
   const joined = [...actual, ...projected];
+  const range = max - min || 1;
+  const step = (w - pad * 2) / (joined.length - 1);
+  const yOf = (v: number) => pad + (1 - (v - min) / range) * (h - pad * 2);
+
+  const [hover, setHover] = useState<number | null>(null);
+  const onMove = (e: ReactMouseEvent<SVGSVGElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * w;
+    const idx = Math.round((x - pad) / step);
+    setHover(Math.max(0, Math.min(joined.length - 1, idx)));
+  };
+
+  const fmt = formatValue ?? ((n: number) => n.toLocaleString("en-IN", { maximumFractionDigits: 1 }));
+  const lastIdx = joined.length - 1;
+  const hoverVal = hover !== null ? joined[hover] : null;
+  const isProjHover = hover !== null && hover >= actual.length;
 
   const actualPath = path(actual, w, h, pad, min, max);
   const projPath = path(joined, w, h, pad, min, max).split(" ").slice(actual.length - 1).join(" ");
@@ -52,8 +74,16 @@ export function TrendChart({
   const id = `g${color.replace(/[^a-z0-9]/gi, "")}`;
 
   return (
-    <div className="w-full">
-      <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height }} preserveAspectRatio="none" aria-hidden="true">
+    <div className="relative w-full">
+      <svg
+        viewBox={`0 0 ${w} ${h}`}
+        className="w-full"
+        style={{ height }}
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        onMouseMove={onMove}
+        onMouseLeave={() => setHover(null)}
+      >
         <defs>
           <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={color} stopOpacity="0.22" />
@@ -61,14 +91,64 @@ export function TrendChart({
           </linearGradient>
         </defs>
         {[0.25, 0.5, 0.75].map((f) => (
-          <line key={f} x1={pad} x2={w - pad} y1={pad + f * (h - pad * 2)} y2={pad + f * (h - pad * 2)} stroke="var(--line)" strokeWidth="1" strokeDasharray="2 4" />
+          <line key={f} x1={pad} x2={w - pad} y1={pad + f * (h - pad * 2)} y2={pad + f * (h - pad * 2)} stroke="var(--line)" strokeWidth="1" strokeDasharray="2 4" opacity="0.35" />
         ))}
         <path d={bandPath} fill={color} fillOpacity="0.07" stroke="none" />
         <path d={areaPath} fill={`url(#${id})`} stroke="none" />
         <path d={actualPath} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
         <path d={projPath} fill="none" stroke={color} strokeWidth="2" strokeDasharray="5 5" strokeLinecap="round" opacity="0.75" />
         <line x1={splitX} x2={splitX} y1={pad} y2={h - pad} stroke="var(--line)" strokeWidth="1" />
+        {hover !== null && hoverVal !== null && (
+          <line
+            x1={pad + hover * step}
+            x2={pad + hover * step}
+            y1={pad}
+            y2={h - pad}
+            stroke={color}
+            strokeWidth="1"
+            opacity="0.5"
+          />
+        )}
       </svg>
+
+      {hover !== null && hoverVal !== null && (
+        <>
+          <span
+            className="pointer-events-none absolute h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-card"
+            style={{ left: `${((pad + hover * step) / w) * 100}%`, top: `${(yOf(hoverVal) / h) * 100}%`, background: color }}
+          />
+          <div
+            className="pointer-events-none absolute z-10 -translate-x-1/2 whitespace-nowrap rounded-md border border-line bg-card px-2 py-1 font-mono text-[10.5px] shadow-lg"
+            style={{
+              left: `${Math.min(92, Math.max(8, ((pad + hover * step) / w) * 100))}%`,
+              top: `${Math.max(0, (yOf(hoverVal) / h) * 100 - 18)}%`,
+            }}
+          >
+            <span className={`mr-1.5 uppercase tracking-wider ${isProjHover ? "text-mut" : "text-cyan"}`}>
+              {isProjHover ? "Proj" : "Actual"}
+            </span>
+            <span className="text-txt">{fmt(hoverVal)}</span>
+          </div>
+        </>
+      )}
+
+      {live && (
+        <>
+          <span
+            className="pointer-events-none absolute h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full animate-pulse"
+            style={{
+              left: `${((pad + lastIdx * step) / w) * 100}%`,
+              top: `${(yOf(joined[lastIdx]) / h) * 100}%`,
+              background: color,
+            }}
+          />
+          <span className="pointer-events-none absolute right-1 top-1 flex items-center gap-1.5 rounded-full border border-stable/30 bg-stable/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-stable">
+            <span className="h-1 w-1 animate-pulse rounded-full bg-stable" />
+            Live
+          </span>
+        </>
+      )}
+
       {splitLabel && (
         <div className="mt-1 flex justify-between font-mono text-[10px] text-mut">
           <span>{splitLabel[0]}</span>

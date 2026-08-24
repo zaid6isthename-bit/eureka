@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { CountUp } from "@/components/ui/CountUp";
 import { Sparkline, TrendChart } from "@/components/ui/charts";
 import { Skeleton, SkeletonCard, SkeletonRow } from "@/components/ui/Skeleton";
 import { ALERTS, CASH, HEALTH, RECOMMENDATIONS, TRAPPED } from "@/lib/mock-data";
+import { useLiveSeries } from "@/lib/use-live-series";
 import { lakh, monoDate } from "@/lib/format";
 
 const sevColor = { high: "bg-risk", medium: "bg-gold", low: "bg-cyan" } as const;
@@ -21,7 +22,12 @@ export default function OverviewPage() {
     return () => clearTimeout(t);
   }, []);
 
-  const actual = range === 90 ? CASH.actual : CASH.actual.slice(-12);
+  const cashSeed = useMemo(() => (range === 90 ? CASH.actual : CASH.actual.slice(-12)), [range]);
+  const liveCash = useLiveSeries(cashSeed);
+  const liveSpark = useLiveSeries(HEALTH.spark, 4000);
+  const cashNow = liveCash[liveCash.length - 1];
+
+  const actual = liveCash;
 
   const act = (id: string, status: "accepted" | "dismissed") =>
     setActions((as) => as.map((a) => (a.id === id ? { ...a, status } : a)));
@@ -56,7 +62,7 @@ export default function OverviewPage() {
                   duration={500}
                   className="font-mono text-[44px] font-medium leading-none text-txt"
                 />
-                <Sparkline points={HEALTH.spark} color="var(--gold)" />
+                <Sparkline points={liveSpark} color="var(--gold)" />
               </div>
               <p className="mt-3 text-[13px] text-mut">{HEALTH.status}</p>
             </section>
@@ -105,10 +111,16 @@ export default function OverviewPage() {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         <section className="rounded-[10px] border border-line bg-ink-800 p-4 xl:col-span-7" aria-label="Cash flow snapshot">
           <div className="flex items-center justify-between">
-            <h2 className="text-[12px] font-medium uppercase tracking-wider text-mut">Cash flow</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-[12px] font-medium uppercase tracking-wider text-mut">Cash flow</h2>
+              <span className="flex items-center gap-1.5 rounded-full border border-stable/30 bg-stable/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-stable">
+                <span className="h-1 w-1 animate-pulse rounded-full bg-stable" />
+                Live
+              </span>
+            </div>
             <div className="flex items-center gap-3">
               <span className="font-mono text-[13px] text-green-accent">
-                <CountUp value={CASH.current} format={lakh} />
+                <CountUp value={cashNow * 100000} format={lakh} />
               </span>
               <div role="group" aria-label="Chart range" className="flex rounded-md border border-line bg-ink-900 p-0.5">
                 {([30, 90] as const).map((r) => (
@@ -128,7 +140,7 @@ export default function OverviewPage() {
             <Skeleton className="mt-4 h-[160px] w-full" />
           ) : (
             <div className="mt-4">
-              <TrendChart actual={actual} projected={CASH.projected} bandPct={CASH.bandPct} color="var(--signal-green)" splitLabel={["actual \u00B7 90d", "projected \u00B7 30d"]} />
+              <TrendChart actual={liveCash} projected={CASH.projected} bandPct={CASH.bandPct} color="var(--signal-green)" live formatValue={(n) => lakh(n * 100000)} splitLabel={["actual \u00B7 90d", "projected \u00B7 30d"]} />
             </div>
           )}
         </section>

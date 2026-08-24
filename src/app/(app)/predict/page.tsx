@@ -5,6 +5,7 @@ import Link from "next/link";
 import { TrendChart } from "@/components/ui/charts";
 import { SkeletonCard } from "@/components/ui/Skeleton";
 import { CASH, INVENTORY_TREND, PREDICTIONS } from "@/lib/mock-data";
+import { useLiveSeries } from "@/lib/use-live-series";
 import { lakh } from "@/lib/format";
 import { CountUp } from "@/components/ui/CountUp";
 
@@ -37,7 +38,12 @@ export default function PredictPage() {
     return () => clearTimeout(t);
   }, []);
 
+  const liveCash = useLiveSeries(CASH.actual);
+  const liveInventory = useLiveSeries(INVENTORY_TREND.actual);
   const m = METRICS[metric];
+  const liveActual = metric === "cash" ? liveCash : liveInventory;
+  const liveNow = liveActual[liveActual.length - 1];
+  const scale = metric === "cash" ? 100000 : 10000000;
 
   return (
     <div className="space-y-4">
@@ -49,9 +55,15 @@ export default function PredictPage() {
       <section className="rounded-[10px] border border-line bg-ink-800 p-4" aria-label="Primary forecast">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-[12px] font-medium uppercase tracking-wider text-mut">{m.label} forecast</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-[12px] font-medium uppercase tracking-wider text-mut">{m.label} forecast</h2>
+              <span className="flex items-center gap-1.5 rounded-full border border-stable/30 bg-stable/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-stable">
+                <span className="h-1 w-1 animate-pulse rounded-full bg-stable" />
+                Live
+              </span>
+            </div>
             <p className="mt-1 font-mono text-[24px] font-medium leading-none text-txt">
-              <CountUp key={metric} value={m.current} format={(v) => m.fmt(metric === "cash" ? v / 100000 : v / 23400000 * 2.34)} />
+              <CountUp key={metric} value={liveNow * scale} format={(v) => m.fmt(metric === "cash" ? v / 100000 : v / 23400000 * 2.34)} />
               <span className="ml-2 align-middle font-mono text-[11px] text-mut">today</span>
             </p>
           </div>
@@ -73,11 +85,13 @@ export default function PredictPage() {
         ) : (
           <div className="mt-4">
             <TrendChart
-              actual={m.actual}
+              actual={liveActual}
               projected={m.projected}
               bandPct={m.bandPct}
               color={m.color}
               height={220}
+              live
+              formatValue={(n) => (metric === "cash" ? m.fmt(n * 100000) : m.fmt(n))}
               splitLabel={["actual \u00B7 90d", "projected \u00B7 60d \u00B7 shaded = confidence band"]}
             />
           </div>
