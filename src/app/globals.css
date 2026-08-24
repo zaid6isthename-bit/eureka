@@ -168,9 +168,9 @@ body {
 }
 
 /* --- Typography --- */
-h1, .h1 { font-family: var(--font-space-grotesk), system-ui, sans-serif; font-size: 2rem; font-weight: 600; color: var(--txt); }
-h2, .h2 { font-family: var(--font-space-grotesk), system-ui, sans-serif; font-size: 1.75rem; font-weight: 600; color: var(--txt); }
-h3, .h3 { font-family: var(--font-space-grotesk), system-ui, sans-serif; font-size: 1.5rem; font-weight: 600; color: var(--txt); }
+h1, .h1 { font-family: var(--font-space-grotesk), system-ui, sans-serif; font-size: 2rem; font-weight: 600; }
+h2, .h2 { font-family: var(--font-space-grotesk), system-ui, sans-serif; font-size: 1.75rem; font-weight: 600; }
+h3, .h3 { font-family: var(--font-space-grotesk), system-ui, sans-serif; font-size: 1.5rem; font-weight: 600; }
 .body1 { font-family: var(--font-inter), system-ui, sans-serif; font-size: 1rem; line-height: 1.5; color: var(--ink-700); }
 .body2 { font-family: var(--font-inter), system-ui, sans-serif; font-size: 0.875rem; line-height: 1.5; color: var(--ink-600); }
 .caption { font-family: var(--font-inter), system-ui, sans-serif; font-size: 0.75rem; color: var(--muted); line-height: 1.4; }

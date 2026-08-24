@@ -85,7 +85,10 @@ export default function LoginPage() {
           />
           <div className="relative">
             <Image src="/reclaim-dark.png" alt="RECLAIM" width={40} height={40} className="rounded-xl" />
-            <h1 className="mt-6 font-display text-[30px] font-bold leading-tight tracking-tight text-white">
+            <h1
+              className="mt-6 font-display text-[30px] font-bold leading-tight tracking-tight text-white"
+              style={{ color: "#FFFFFF" }}
+            >
               Every rupee,
               <br />
               accounted for.
