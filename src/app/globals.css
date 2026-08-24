@@ -3,43 +3,43 @@
 /* -- RECLAIM Theme System: light (white/green) + dark -- */
 
 :root {
-  /* Backgrounds */
-  --bg: #FFFFFF;
-  --bg-subtle: #F8F9FA;
+  /* Backgrounds — Fenco Overview palette */
+  --bg: #F2F1EF;
+  --bg-subtle: #F2F1EF;
   --surface: #FFFFFF;
-  --surface-elevated: #F5F5F5;
+  --surface-elevated: #FFFFFF;
   --card: #FFFFFF;
 
-  /* Borders */
-  --border: #2E7D32;       /* green accent border */
-  --border-weak: #C8E6C9;  /* light green */
+  /* Borders — subtle hairlines */
+  --border: #E7E7E5;
+  --border-weak: #E7E7E5;
   --border-disabled: #E0E0E0;
 
-  /* Ink ramp — relative surfaces/text, swap per theme */
-  --ink-100: #EEF2EE;
-  --ink-200: #DDE4DD;
-  --ink-300: #C3CCC3;
-  --ink-400: #9AA79A;
-  --ink-500: #758475;
-  --ink-600: #5B6B5B;
-  --ink-700: #425042;
-  --ink-800: #F7F9F7;   /* card surface */
-  --ink-750: #ECF0EC;   /* hover surface */
-  --ink-900: #F0F3F0;   /* header/track surface */
-  --ink-950: #0A0C0A;   /* primary text / black accent */
+  /* Ink ramp — neutral surfaces/text */
+  --ink-100: #ECEBE9;
+  --ink-200: #DEDDD9;
+  --ink-300: #C9C8C3;
+  --ink-400: #A7A6A0;
+  --ink-500: #8B8D98;
+  --ink-600: #6E7078;
+  --ink-700: #55575E;
+  --ink-800: #FFFFFF;   /* card surface */
+  --ink-750: #FAFAF8;   /* hover surface */
+  --ink-900: #F2F1EF;   /* header/track surface */
+  --ink-950: #16171A;   /* primary dark */
 
-  --txt: #101410;
-  --line: #E2E8E2;
+  --txt: #16171A;
+  --line: #E7E7E5;
 
-  /* Green accents */
-  --signal-green: #2E7D32;
-  --signal-green-light: #C8E6C9;
-  --signal-green-hover: #A5D6A7;
-  --signal-green-border: #2E7D32;
+  /* Accents — Fenco blue */
+  --signal-green: #8CA0F7;
+  --signal-green-light: #EEF1FE;
+  --signal-green-hover: #DCE3FB;
+  --signal-green-border: #8CA0F7;
 
-  /* Data/system - cyan */
-  --flow-cyan: #0891B2;
-  --flow-cyan-light: #E0F2F1;
+  /* Data/system - mint */
+  --flow-cyan: #2E9E85;
+  --flow-cyan-light: #E6F5F1;
 
   /* Semantic accents */
   --gold: #B45309;
@@ -50,8 +50,8 @@
   --info-blue: #1565C0;
 
   /* Muted */
-  --muted: #667085;
-  --muted-soft: #E5E7EB;
+  --muted: #8B8D98;
+  --muted-soft: #E7E7E5;
 }
 
 [data-theme="dark"] {
@@ -200,6 +200,9 @@ h3, .h3 { font-family: var(--font-space-grotesk), system-ui, sans-serif; font-si
     linear-gradient(90deg, var(--signal-green-light) 1px, transparent 1px);
   background-size: 28px 28px;
 }
+
+/* --- Fenco card radius: all 10px tiles become 20px widget cards --- */
+.rounded-\[10px\] { border-radius: var(--radius-card, 20px); }
 
 /* --- Reduced Motion --- */
 @media (prefers-reduced-motion: reduce) {
